@@ -5,5 +5,4 @@ export interface Income {
     description: string;
     value: number;
     user: User;
-    createdAt: Date;
 }
