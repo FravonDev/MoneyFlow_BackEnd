@@ -15,7 +15,7 @@ model User {
   name      String
   password  String
   createdAt DateTime  @default(now())
-  ballance  Float
+  balance  Float
   Incomes   Income[]
   Outcomes  Outcome[]
 
