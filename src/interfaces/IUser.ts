@@ -1,4 +1,4 @@
-import { Income } from "./IIncomes";
+import { Income } from "./IIncome";
 import { Outcome } from "./IOutcome";
 
 export interface User {

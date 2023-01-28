@@ -1,5 +1,5 @@
 import IncomeRepository from "./IncomeRepository";
-import { Income } from "../interfaces/IIncomes";
+import { Income } from "../interfaces/IIncome";
 import { User } from "../interfaces/IUser";
 import { NewIncome } from "../interfaces/INewIncome";
 

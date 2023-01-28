@@ -1,5 +1,5 @@
 import { prisma } from "../database/prisma";
-import { Income } from "../interfaces/IIncomes";
+import { Income } from "../interfaces/IIncome";
 import { NewIncome } from "../interfaces/INewIncome";
 import { User } from "../interfaces/IUser";
 

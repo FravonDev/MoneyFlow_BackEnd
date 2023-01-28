@@ -1,7 +1,7 @@
 import UserRepository from "./UserRepository";
 import { NewUser } from "../interfaces/INewUser";
 import { User } from "../interfaces/IUser";
-import { Income } from "../interfaces/IIncomes";
+import { Income } from "../interfaces/IIncome";
 import { NewIncome } from "../interfaces/INewIncome";
 
 const userRepository = new UserRepository();
