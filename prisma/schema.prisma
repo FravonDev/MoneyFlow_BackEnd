@@ -15,7 +15,7 @@ model User {
   name      String
   password  String
   createdAt DateTime  @default(now())
-  ballance  Float
+  balance  Float
   Incomes   Income[]
   Outcomes  Outcome[]
 
@@ -24,7 +24,7 @@ model User {
 
 model Income {
   id          Int      @id @default(autoincrement())
-  value       Int
+  value       Float
   description String
   createdAt   DateTime @default(now())
   User        User     @relation(fields: [userId], references: [id])
@@ -36,7 +36,7 @@ model Income {
 
 model Outcome {
   id          Int      @id @default(autoincrement())
-  value       Int
+  value       Float
   description String
   createdAt   DateTime @default(now())
   User        User     @relation(fields: [userId], references: [id])

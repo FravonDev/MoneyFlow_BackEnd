@@ -1,8 +1,6 @@
-import { User } from "./IUser";
-
 export interface Income {
-    id: string;
+    id: number;
     description: string;
     value: number;
-    user: User;
+    userId: number;
 }

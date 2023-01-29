@@ -1,6 +1,12 @@
+import { Income } from "./IIncome";
+import { Outcome } from "./IOutcome";
+
 export interface User {
-    id: string;
+    id: number;
     name: string;
     email: string;
-    balance: number;
+    password: string,
+    balance: number,
+    Incomes?: Income[]
+    Outcomes?: Outcome[]
     }
