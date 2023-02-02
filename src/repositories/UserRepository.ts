@@ -4,9 +4,6 @@ import { User } from "../interfaces/IUser";
 
 export default class UserRepository {
   async createUser(NewUserData: NewUser) {
-    if (await this.existsUser(NewUserData.email)) {
-      return new Error("Email already in use");
-    }
     return await prisma.user.create({
       data: {
         name: NewUserData.name,
