@@ -1,6 +1,6 @@
+import 'express-async-errors'
 import { Router } from "express";
 import { UserController } from "../controllers/UserController";
-import { validateUser } from "../services/validations/UserValidation";
 
 const routes = Router();
 

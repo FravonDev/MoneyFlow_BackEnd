@@ -25,9 +25,26 @@ const validationRegex: any = {
   },
 };
 
-function validateUser(request: Request) {
+function validateUser(request: Request): string[] {
   const { body } = request;
   const errors: string[] = [];
+  const contentType = request.get("Content-Type");
+
+  if (!contentType || contentType !== "application/json") {
+    errors.push("invalid request: Content-Type should be application/json");
+    return errors;
+  }
+
+  if (!body || Object.keys(request.body).length === 0) {
+    errors.push(`invalid request: no body data found`);
+    return errors;
+  }
+
+  if (!body.name || !body.email || !body.password) {
+    errors.push("name, email and password are required");
+    return errors
+  }
+  
   Object.keys(schemaUser).forEach((item) => {
     const itemSchema = schemaUser[item];
 
@@ -52,8 +69,7 @@ function validateUser(request: Request) {
     }
   });
 
-  if (errors.length > 0) { return errors; }
-  return;
+    return errors;
 }
 
 export { validateUser };
