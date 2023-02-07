@@ -15,7 +15,7 @@ export class UserController {
     const userExists = await userRepository.existsUser(email);
 
     if (userExists) {
-      throw new Error("Email already in use");
+      throw new ConflictRequestError("Email already in use");
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
