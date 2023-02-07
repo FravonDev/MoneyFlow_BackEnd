@@ -17,3 +17,15 @@ export class ConflictRequestError extends ApiError {
   }
 
 }
+export class NotFoundError extends ApiError {
+  constructor(message: string) {
+    super(message, 404);
+  }
+
+}
+export class Unauthorized extends ApiError {
+  constructor(message: string) {
+    super(message, 401);
+  }
+
+}
