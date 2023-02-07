@@ -8,8 +8,7 @@ const userRepository = new UserRepository();
 
 export class UserController {
   async register(req: Request, res: Response) {
-    const dataErrors = validateUser(req);
-    if (dataErrors.length > 1) return res.status(400).json(dataErrors);
+    validateUser(req);
 
     const { name, email, password } = req.body;
     const userExists = await userRepository.existsUser(email);

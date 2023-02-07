@@ -1,75 +1,28 @@
 import { Request } from "express";
+import Joi from "joi";
+import { ApiError } from "../../middlewares/errorHandler/ApiErrors";
 
-const schemaUser: any = {
-  name: {
-    required: "name required",
-    min: 2,
-    max: 255,
-  },
-  password: {
-    required: "password required",
-    min: 8,
-    max: 32,
-  },
-  email: {
-    required: "E-mail required",
-  },
-};
-
-const validationRegex: any = {
-  email: {
-    regex: "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$",
-  },
-  name: {
-    regex: "^[A-zÀ-ú '´]+$",
-  },
-};
-
-function validateUser(request: Request): string[] {
-  const { body } = request;
-  const errors: string[] = [];
-  const contentType = request.get("Content-Type");
-
-  if (!contentType || contentType !== "application/json") {
-    errors.push("invalid request: Content-Type should be application/json");
-    return errors;
-  }
-
-  if (!body || Object.keys(request.body).length === 0) {
-    errors.push(`invalid request: no body data found`);
-    return errors;
-  }
-
-  if (!body.name || !body.email || !body.password) {
-    errors.push("name, email and password are required");
-    return errors
-  }
-  
-  Object.keys(schemaUser).forEach((item) => {
-    const itemSchema = schemaUser[item];
-
-    if (itemSchema.required && !body[item]) {
-      errors.push(`${item} - ${itemSchema.required}`);
-    }
-    if (body[item] != body[item].replace(/\s+/g, " ").trim()) {
-      errors.push(`${item} - has invalid spaces`);
-    }
-    if (itemSchema.min && body[item].length < itemSchema.min) {
-      errors.push(`${item} - minimun length is ${itemSchema.min}`);
-    }
-
-    if (itemSchema.max && body[item].length > itemSchema.max) {
-      errors.push(`${item} - maximum is ${itemSchema.max}`);
-    }
-
-    const regexItem: any = validationRegex[item];
-
-    if (regexItem && !new RegExp(regexItem.regex).test(body[item])) {
-      errors.push(`${item} - incorrect format`);
-    }
+function validateUser(req: Request) {
+  const schema = Joi.object({
+    name: Joi.string().min(2).max(255).trim().required().messages({
+      "string.min": "Name must be at least 2 characters long",
+      "string.empty": "Name is required",
+    }),
+    email: Joi.string().email().min(2).max(254).trim().required().messages({
+      "string.email": "Email is required and needs to be in the correct format",
+      "string.empty": "Email is required",
+    }),
+    password: Joi.string().min(8).max(32).trim().required().messages({
+      "string.min": "Password must be at least 8 characters long",
+      "string.empty": "Password is required",
+    }),
   });
 
-    return errors;
+  const validation = schema.validate(req.body);
+
+  if (validation.error) {
+    throw new ApiError(validation.error.message, 400);
+  }
 }
 
 export { validateUser };
