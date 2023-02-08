@@ -49,6 +49,9 @@ O código no arquivo **index.ts**  configura um servidor web utilizando o Expres
 - cors: utilizado para controlar o acesso à aplicação
 - routes: arquivo que contém as rotas da aplicação
 - dotenv: utilizado para carregar as variáveis de ambiente
+- errorMiddleware: utilizado para tratar erros
+- express-async-errors: utilizado para lidar com erros de forma assíncrona
+- Joi: utilizado para verificar as requisições
 
 **Como funciona:**
 
@@ -58,10 +61,11 @@ O código no arquivo **index.ts**  configura um servidor web utilizando o Expres
 4. Utiliza o cors para controlar o acesso à aplicação.
 5. Utiliza o express.json() e o express.urlencoded() para habilitar o suporte ao corpo da requisição em formato json e urlencoded.
 6. Utiliza as rotas importadas para gerenciar as rotas da aplicação.
-7. Utiliza a variável de ambiente PORT para definir a porta em que o servidor irá escutar.
-8. O servidor escuta na porta especificada e imprime uma mensagem no console quando iniciado.
+7. utiliza o middleware de erro
+8. Utiliza a variável de ambiente PORT para definir a porta em que o servidor irá escutar.
+9. O servidor escuta na porta especificada e imprime uma mensagem no console quando iniciado.
 
-Nota: É necessário configurar as variáveis de ambiente necessárias antes de executar o código. Além disso, é importante mencionar que quando houver uma nova operação de entrada ou saída (Income ou Outcome), o saldo (balance) da tabela de usuários (User) deve ser atualizado. Como o Prisma não tem triggers, é necessário criar uma função para atualizar o saldo e utilizá-la nas funções que devem mudar o saldo.
+Nota: Lembre-se de configurar as variáveis de ambiente necessárias antes de executar o código. Além disso, é importante mencionar que quando houver uma nova operação de entrada ou saída (Income ou Outcome), o saldo (balance) da tabela de usuários (User) deve ser atualizado. Como o Prisma não tem triggers, é necessário criar uma função para atualizar o saldo e utilizá-la nas funções que devem mudar o saldo.
 
 ## **Utilizando o Repository Pattern**
 
@@ -136,3 +140,33 @@ Para cada arquivo de Repository, um arquivo de testes será criado, começando p
 - **Teste getAllOutcomes**: Testa se é possível buscar todas as saídas de um usuário. Verifica se todas as saídas do usuário possuem as propriedades esperadas.
 - **Teste updateOutcome**: Testa se é possível atualizar uma saída pelo id. Verifica se a saída atualizada possui as propriedades atualizadas.
 - **Teste deleteOutcome**: Testa se é possível deletar uma saída pelo id. Verifica se a saída foi removida corretamente.
+
+## **Controllers**
+
+Nossos controllers são a camada da aplicação responsáveis pela lógica de negócios, lidando diretamente com as rotas. no UserController.ts, temos:
+
+Register: responsável pela lógica de negócios referente ao registro de novos usuários, validando, comunicando com os repositórios, tratando das requisições HTTP. criando o hash da senha com o bcrypt
+
+## Validação dos dados da ****requisição****
+
+A fim de garantir que as informações recebidas em nossas requisições sejam válidas, criamos uma função de validação usando joi.
+
+As regras específicas para cada campo são definidas em uma estrutura de objeto, incluindo tipo de dados, tamanho mínimo e máximo, obrigatoriedade, entre outras. Se algum dado não satisfizer as regras definidas, uma exceção será lançada com uma mensagem de erro personalizada.
+
+Esta validação é importante para garantir que nossa aplicação funcione de forma correta e evitar problemas relacionados a dados inválidos ou incompletos. Além disso, ela contribui para a segurança da aplicação, impedindo a entrada de informações maliciosas ou inadequadas.
+
+## Criando rotas
+
+Primeiro criei a rota de registrar-se e a conectei com o
+
+**Adicionando autenticação:**
+
+Quando um usuário for acessar alguma rota,  ele precisa estar logado, par isso precisamos implementar uma autenticação para que apenas usuários que fizeram login possam utilizar.
+
+para isso usei jsonwebtoken, mais conhecido como jwt
+
+## Middleware para tratamento de erros
+
+Para garantir a estabilidade da aplicação, foi implementado um middleware de erros que captura e trata quaisquer erros ou exceções geradas durante a execução da aplicação. Este middleware irá substituir todos os blocos Try-Catch existentes e garantir que erros não causem interrupções na aplicação.
+
+Para usar este middleware, é importante instalar e importar o módulo "express-async-erros", e colocá-lo após as rotas na aplicação. Isso garantirá que o middleware funcione de forma assíncrona e intercepte qualquer erro que possa ser lançado.
