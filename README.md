@@ -147,6 +147,19 @@ Nossos controllers são a camada da aplicação responsáveis pela lógica de ne
 
 Register: responsável pela lógica de negócios referente ao registro de novos usuários, validando, comunicando com os repositórios, tratando das requisições HTTP. criando o hash da senha com o bcrypt
 
+## Teste de integração nas rotas
+Para verificar se as partes da aplicação funcionam corretamente juntas,  A biblioteca supertest é usada para realizar requisições HTTP e a classe UserRepository é instanciada para acessar a camada responsavél  pelos dados dos usuários.
+
+rota register (POST):
+
+Os testes cobrem três cenários:
+- Criação de um novo usuário com sucesso
+- Retorno de erro quando o email já está em uso
+- Retorno de erro quando os dados da requisição são inválidos
+
+Cada cenário é descrito com a função it e verifica o status code e o corpo da resposta para garantir que o comportamento esperado seja alcançado.
+
+
 ## Validação dos dados da ****requisição****
 
 A fim de garantir que as informações recebidas em nossas requisições sejam válidas, criamos uma função de validação usando joi.
@@ -155,9 +168,18 @@ As regras específicas para cada campo são definidas em uma estrutura de objeto
 
 Esta validação é importante para garantir que nossa aplicação funcione de forma correta e evitar problemas relacionados a dados inválidos ou incompletos. Além disso, ela contribui para a segurança da aplicação, impedindo a entrada de informações maliciosas ou inadequadas.
 
-## Criando rotas
+## Criação rotas
+As rotas são a porta de entrada para o usuário interagir com o sistema e realizar as ações desejadas. As rotas são criadas com a biblioteca Express, que facilita a criação de rotas de forma simples e organizada.
+além das rotas básicas, é importante adicionar validações e tratamentos de erro para garantir a segurança e a qualidade da aplicação, para isso, são criados os controllers, que são responsáveis por realizar as valdiações e a integração entre as camadas da aplicação
 
-Primeiro criei a rota de registrar-se e a conectei com o
+Rota de Registro:
+A rota de registro é responsável por permitir que um novo usuário se cadastre na aplicação. Ela utiliza o método POST e recebe os dados do usuário (nome, email e senha) através da requisição.
+
+Antes de registrar o usuário, é realizada uma série de validações para garantir que os dados enviados são válidos e seguem as regras da aplicação (por exemplo, o email não pode já estar em uso). Caso alguma validação falhe, é retornado um status code de erro (400 - Bad Request) junto com uma mensagem de erro específica.
+
+Se todas as validações passarem, o usuário é registrado e é retornado um status code de sucesso (201 - Created) junto com o corpo da resposta, que inclui o ID, nome e email do usuário registrado.
+
+O código da rota de registro e do seu controller está testado e funcionando corretamente, garantindo assim a qualidade da aplicação
 
 **Adicionando autenticação:**
 
