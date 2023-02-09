@@ -40,3 +40,51 @@ describe("POST /register", () => {
     expect(response.body).toHaveProperty("message");
   });
 });
+
+describe("POST /login", () => {
+  it("should create a new user", async () => {
+    const response = await request(app).post("/register").send({
+      name: "Josefumi Kujo",
+      email: "jojo@example.com",
+      password: "soft&wet",
+    });
+    expect(response.statusCode).toBe(201);
+    expect(response.body).toHaveProperty("id");
+    expect(response.body).toHaveProperty("name", "Josefumi Kujo");
+    expect(response.body).toHaveProperty("email", "jojo@example.com");
+  });
+
+  it("should return 200 and a token when email and password are correct", async () => {
+    const response = await request(app).post("/login").send({
+      email: "jojo@example.com",
+      password: "soft&wet",
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toHaveProperty("userLogin");
+    expect(response.body).toHaveProperty("token");
+  });
+
+  it("should return 404 when email is incorrect", async () => {
+    const response = await request(app).post("/login").send({
+      email: "not-found@example.com",
+      password: "soft&wet",
+    });
+
+    expect(response.statusCode).toBe(404);
+    expect(response.body).toHaveProperty("message", "User not found");
+  });
+
+  it("should return 404 when password is incorrect", async () => {
+    const response = await request(app).post("/login").send({
+      email: "jojo@example.com",
+      password: "incorrect-password",
+    });
+
+    expect(response.statusCode).toBe(404);
+    expect(response.body).toHaveProperty(
+      "message",
+      "Invalid email or password"
+    );
+  });
+});

@@ -52,6 +52,7 @@ O código no arquivo **index.ts**  configura um servidor web utilizando o Expres
 - errorMiddleware: utilizado para tratar erros
 - express-async-errors: utilizado para lidar com erros de forma assíncrona
 - Joi: utilizado para verificar as requisições
+- jsonwebtoken: utilizado para gerar e validar tokens JWT
 
 **Como funciona:**
 
@@ -146,18 +147,29 @@ Para cada arquivo de Repository, um arquivo de testes será criado, começando p
 Nossos controllers são a camada da aplicação responsáveis pela lógica de negócios, lidando diretamente com as rotas. no UserController.ts, temos:
 
 Register: responsável pela lógica de negócios referente ao registro de novos usuários, validando, comunicando com os repositórios, tratando das requisições HTTP. criando o hash da senha com o bcrypt
-
 ## Teste de integração nas rotas
-Para verificar se as partes da aplicação funcionam corretamente juntas,  A biblioteca supertest é usada para realizar requisições HTTP e a classe UserRepository é instanciada para acessar a camada responsavél  pelos dados dos usuários.
 
-rota register (POST):
+Para verificar se as partes da aplicação funcionam corretamente juntas,  A biblioteca supertest é usada para realizar requisições HTTP e a classe UserRepository é instanciada para acessar a camada responsável  pelos dados dos usuários.
+
+Rota register (POST):
 
 Os testes cobrem três cenários:
-- Criação de um novo usuário com sucesso
+-Criação de um novo usuário com sucesso
 - Retorno de erro quando o email já está em uso
 - Retorno de erro quando os dados da requisição são inválidos
 
 Cada cenário é descrito com a função it e verifica o status code e o corpo da resposta para garantir que o comportamento esperado seja alcançado.
+
+Rota login (POST):
+
+Os testem cobrem 3 cenários  
+
+- Login bem sucedido retorna os dados de autenticação do usuário, incluindo o token de autenticação
+
+- Retorno do erro 404 quando o email está incorreto retorna uma mensagem de erro indicando que o usuário não foi encontrado
+
+- Retorno do erro 404 quando a senha está incorreta retorna uma mensagem de erro indicando que o email ou a senha estão incorretos.
+
 
 
 ## Validação dos dados da ****requisição****
@@ -175,17 +187,11 @@ além das rotas básicas, é importante adicionar validações e tratamentos de 
 Rota de Registro:
 A rota de registro é responsável por permitir que um novo usuário se cadastre na aplicação. Ela utiliza o método POST e recebe os dados do usuário (nome, email e senha) através da requisição.
 
+
 Antes de registrar o usuário, é realizada uma série de validações para garantir que os dados enviados são válidos e seguem as regras da aplicação (por exemplo, o email não pode já estar em uso). Caso alguma validação falhe, é retornado um status code de erro (400 - Bad Request) junto com uma mensagem de erro específica.
 
+
 Se todas as validações passarem, o usuário é registrado e é retornado um status code de sucesso (201 - Created) junto com o corpo da resposta, que inclui o ID, nome e email do usuário registrado.
-
-O código da rota de registro e do seu controller está testado e funcionando corretamente, garantindo assim a qualidade da aplicação
-
-**Adicionando autenticação:**
-
-Quando um usuário for acessar alguma rota,  ele precisa estar logado, par isso precisamos implementar uma autenticação para que apenas usuários que fizeram login possam utilizar.
-
-para isso usei jsonwebtoken, mais conhecido como jwt
 
 ## Middleware para tratamento de erros
 
