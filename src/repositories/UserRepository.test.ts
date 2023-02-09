@@ -50,7 +50,7 @@ jest.mock("./UserRepository", () => {
         }),
       existsUser: jest.fn(
         (email: string) =>
-          mockUsers.findIndex((user) => user.email === email) !== -1
+          mockUsers.filter((user) => user.email === email)
       ),
       updateUser: jest
         .fn()
@@ -113,17 +113,17 @@ describe("UserRepository/", () => {
   });
 
   it("should return the answer if the user exists", async () => {
-    const email = "zeppeli@example.com";
+    const email = "giorno@example.com";
 
     const user = await userRepository.existsUser(email);
-    expect(user).toBe(true);
+    expect(user).toMatchObject([mockUsers[0]]);
   });
 
   it("should delete a user by email and password", async () => {
     const email = "ichigo@example.com";
     const password = "zangetsu";
     await userRepository.deleteUser(email, password);
-    expect(userRepository.existsUser(email)).toBe(false);
+    expect(userRepository.existsUser(email)).toStrictEqual([]);
   });
 
   it("should update a user", async () => {

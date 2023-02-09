@@ -20,7 +20,7 @@ export default class UserRepository {
         email,
       },
     });
-    return !!user;
+    return user;
   }
 
   async getUser(email: string, password: string) {
