@@ -1,6 +1,8 @@
 import request from "supertest";
 import app from "../index";
 
+let token = "";
+
 describe("POST /register", () => {
   it("should register a new user", async () => {
     const response = await request(app).post("/register").send({
@@ -86,5 +88,49 @@ describe("POST /login", () => {
       "message",
       "Invalid email or password"
     );
+  });
+});
+describe("POST /logout", () => {
+  it("should create a new user", async () => {
+    const response = await request(app).post("/register").send({
+      name: "Jolyne kujo",
+      email: "jolyne@example.com",
+      password: "stonefree",
+    });
+    expect(response.statusCode).toBe(201);
+    expect(response.body).toHaveProperty("id");
+    expect(response.body).toHaveProperty("name", "Jolyne kujo");
+    expect(response.body).toHaveProperty("email", "jolyne@example.com");
+  });
+
+  it("should login new user", async () => {
+    const response = await request(app).post("/login").send({
+      email: "jolyne@example.com",
+      password: "stonefree",
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toHaveProperty("userLogin");
+    expect(response.body).toHaveProperty("token");
+    token = response.body.token || response.headers["x-access-token"];
+  });
+
+  it("should logout a user", async () => {
+    const response = await request(app).post("/logout").send({
+      email: "jolyne@example.com",
+      password: "stonefree",
+      token: token,
+    });
+    expect(response.statusCode).toBe(204);
+  });
+  it("should not be able to login", async () => {
+    const response = await request(app).post("/logout").send({
+      email: "jolyne@example.com",
+      password: "stonefree",
+      token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+    });
+
+    expect(response.statusCode).toBe(500);
+    expect(response.body).toHaveProperty("message", "invalid signature");
   });
 });
