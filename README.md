@@ -146,7 +146,22 @@ Para cada arquivo de Repository, um arquivo de testes será criado, começando p
 
 Nossos controllers são a camada da aplicação responsáveis pela lógica de negócios, lidando diretamente com as rotas. no UserController.ts, temos:
 
-Register: responsável pela lógica de negócios referente ao registro de novos usuários, validando, comunicando com os repositórios, tratando das requisições HTTP. criando o hash da senha com o bcrypt
+- **Register**: responsável pela lógica de negócios referente ao registro de novos usuários, validando, comunicando com os repositórios, tratando das requisições HTTP. criando o hash da senha com o bcrypt
+- **Login**: responsável pela lógica de negócios referente ao login de usuários cadastrados. Verifica se as credenciais fornecidas pelo usuário são válidas e se correspondem a algum usuário cadastrado no banco de dados. Em caso positivo, o servidor gera e envia um token de autenticação para o usuário.
+- **Logout**: responsável por deslogar usuários. Valida o token de autenticação do usuário com o middleware de autenticação e, em seguida, revoga o token, tornando-o inválido para futuras requisições. Isso impede que o usuário acesse recursos protegidos após o logout.
+## Criação rotas
+As rotas são a porta de entrada para o usuário interagir com o sistema e realizar as ações desejadas. As rotas são criadas com a biblioteca Express, que facilita a criação de rotas de forma simples e organizada.
+além das rotas básicas, é importante adicionar validações e tratamentos de erro para garantir a segurança e a qualidade da aplicação, para isso, são criados os controllers, que são responsáveis por realizar as valdiações e a integração entre as camadas da aplicação
+
+Rota de Registro:
+A rota de registro é responsável por permitir que um novo usuário se cadastre na aplicação. Ela utiliza o método POST e recebe os dados do usuário (nome, email e senha) através da requisição.
+
+
+Antes de registrar o usuário, é realizada uma série de validações para garantir que os dados enviados são válidos e seguem as regras da aplicação (por exemplo, o email não pode já estar em uso). Caso alguma validação falhe, é retornado um status code de erro (400 - Bad Request) junto com uma mensagem de erro específica.
+
+
+Se todas as validações passarem, o usuário é registrado e é retornado um status code de sucesso (201 - Created) junto com o corpo da resposta, que inclui o ID, nome e email do usuário registrado.
+
 ## Teste de integração nas rotas
 
 Para verificar se as partes da aplicação funcionam corretamente juntas,  A biblioteca supertest é usada para realizar requisições HTTP e a classe UserRepository é instanciada para acessar a camada responsável  pelos dados dos usuários.
@@ -162,7 +177,9 @@ Cada cenário é descrito com a função it e verifica o status code e o corpo d
 
 Rota login (POST):
 
-Os testem cobrem 3 cenários  
+Os testem cobrem 4 cenários  
+
+- Cria um usuário exclusivamente para esse teste
 
 - Login bem sucedido retorna os dados de autenticação do usuário, incluindo o token de autenticação
 
@@ -170,7 +187,17 @@ Os testem cobrem 3 cenários
 
 - Retorno do erro 404 quando a senha está incorreta retorna uma mensagem de erro indicando que o email ou a senha estão incorretos.
 
+Rota logout (POST):
 
+Os testem cobrem quatro cenários
+
+- Cria um usuário exclusivamente para esse teste
+
+- Faz o login desse usuário teste
+
+- No logout desse usuário, retorna 204, caso seja um token valido
+
+- Caso falhe retorna 500 e mensagem referente a token inválido
 
 ## Validação dos dados da ****requisição****
 
@@ -180,18 +207,13 @@ As regras específicas para cada campo são definidas em uma estrutura de objeto
 
 Esta validação é importante para garantir que nossa aplicação funcione de forma correta e evitar problemas relacionados a dados inválidos ou incompletos. Além disso, ela contribui para a segurança da aplicação, impedindo a entrada de informações maliciosas ou inadequadas.
 
-## Criação rotas
-As rotas são a porta de entrada para o usuário interagir com o sistema e realizar as ações desejadas. As rotas são criadas com a biblioteca Express, que facilita a criação de rotas de forma simples e organizada.
-além das rotas básicas, é importante adicionar validações e tratamentos de erro para garantir a segurança e a qualidade da aplicação, para isso, são criados os controllers, que são responsáveis por realizar as valdiações e a integração entre as camadas da aplicação
+## middleware de autenticação:
 
-Rota de Registro:
-A rota de registro é responsável por permitir que um novo usuário se cadastre na aplicação. Ela utiliza o método POST e recebe os dados do usuário (nome, email e senha) através da requisição.
+Este middleware tem como objetivo verificar a autenticidade do usuário antes de permitir acesso a rotas protegidas da aplicação. Primeiro, ele busca o token de autenticação nas informações enviadas na requisição, tanto no corpo da requisição quanto no cabeçalho.
 
+Em seguida, ele verifica se há o token e se ele não está na lista de tokens inválidos (revokedTokens).
 
-Antes de registrar o usuário, é realizada uma série de validações para garantir que os dados enviados são válidos e seguem as regras da aplicação (por exemplo, o email não pode já estar em uso). Caso alguma validação falhe, é retornado um status code de erro (400 - Bad Request) junto com uma mensagem de erro específica.
-
-
-Se todas as validações passarem, o usuário é registrado e é retornado um status code de sucesso (201 - Created) junto com o corpo da resposta, que inclui o ID, nome e email do usuário registrado.
+Se tudo estiver correto, o usuário é autenticado e o próximo passo é permitido com o next(). Caso contrário, uma exceção é lançada indicando que o token não foi fornecido ou é inválido.
 
 ## Middleware para tratamento de erros
 

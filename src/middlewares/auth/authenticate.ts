@@ -6,8 +6,8 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
     
   const blacklistedTokens: string[] = [];
   const token = req.body.token || req.headers["x-access-token"];
-  
 
+  
   if (!token) {
     throw new UnauthorizedError("Token not provided");
   }

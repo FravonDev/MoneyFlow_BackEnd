@@ -5,9 +5,12 @@ import { validateUser } from "../services/validations/UserValidation";
 import {
   ConflictRequestError,
   NotFoundError,
+  UnauthorizedError,
 } from "../middlewares/errorHandler/ApiErrors";
 import jwt from "jsonwebtoken";
 import { loginValidator } from "../services/validations/LoginValidator";
+import { revokedTokens } from "../middlewares/auth/revokedTokens";
+import { token } from "morgan";
 
 const userRepository = new UserRepository();
 
@@ -36,7 +39,7 @@ export class UserController {
   }
 
   async login(req: Request, res: Response) {
-    loginValidator(req)
+    loginValidator(req);
     const { email, password } = req.body;
 
     const user = await userRepository.existsUser(email);
@@ -49,7 +52,7 @@ export class UserController {
       throw new NotFoundError("Invalid email or password");
     }
 
-    const token = jwt.sign({ id: user.id }, process.env.JWT_PASS ?? "", {
+    const token = jwt.sign({ id: user.id }, process.env.JWT_PASS as string, {
       expiresIn: "1d",
     });
     const { password: _, ...userLogin } = user;
@@ -57,5 +60,11 @@ export class UserController {
       userLogin,
       token,
     });
+  }
+
+  async logout(req: Request, res: Response) {
+    const token = req.body.token || req.headers["x-access-token"];
+    revokedTokens.push(token);
+    return res.status(204).json("Logout successfull");
   }
 }
