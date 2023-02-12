@@ -55,7 +55,7 @@ describe("IncomeRepository methods", () => {
       description: "Conta de Luz",
       value: 250.56,
     };
-    const newIncome = await incomeRepository.createIncome(testincome, testUser);
+    const newIncome = await incomeRepository.createIncome(testincome, testUser.id);
     expect(newIncome).toMatchObject({
       description: "Conta de Luz",
       value: 250.56,
@@ -65,7 +65,7 @@ describe("IncomeRepository methods", () => {
   });
 
   it("should get all incomes from a user", async () => {
-    const incomes = await incomeRepository.getIncomes(testUser);
+    const incomes = await incomeRepository.getIncomes(testUser.id);
     expect(incomes.every((income) => income.userId === testUser.id)).toBe(true);
   });
   it("should delete a Income", async () => {
@@ -93,7 +93,5 @@ describe("IncomeRepository methods", () => {
       value: 100,
       description: "Agua",
     });
-  });
-
- 
+  }); 
 });

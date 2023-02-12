@@ -4,24 +4,24 @@ import { NewIncome } from "../interfaces/INewIncome";
 import { User } from "../interfaces/IUser";
 
 export default class IncomeRepository {
-  async createIncome(Income: NewIncome, User: User) {
+  async createIncome(Income: NewIncome, id: number) {
     return await prisma.income.create({
       data: {
         description: Income.description,
         value: Income.value,
         User: {
           connect: {
-            id: User.id,
+            id,
           },
         },
       },
     });
   }
 
-  async getIncomes(User: User) {
+  async getIncomes(id: number) {
     return await prisma.income.findMany({
       where: {
-        userId: User.id,
+        userId: id,
       },
     });
   }
