@@ -53,6 +53,8 @@ O código no arquivo **index.ts**  configura um servidor web utilizando o Expres
 - express-async-errors: utilizado para lidar com erros de forma assíncrona
 - Joi: utilizado para verificar as requisições
 - jsonwebtoken: utilizado para gerar e validar tokens JWT
+- bcrypt: utilizado para criptografar senhas
+
 
 **Como funciona:**
 
@@ -153,7 +155,7 @@ Nossos controllers são a camada da aplicação responsáveis pela lógica de ne
 As rotas são a porta de entrada para o usuário interagir com o sistema e realizar as ações desejadas. As rotas são criadas com a biblioteca Express, que facilita a criação de rotas de forma simples e organizada.
 além das rotas básicas, é importante adicionar validações e tratamentos de erro para garantir a segurança e a qualidade da aplicação, para isso, são criados os controllers, que são responsáveis por realizar as valdiações e a integração entre as camadas da aplicação
 
-Rota de Registro:
+**Rota de Registro:**
 A rota de registro é responsável por permitir que um novo usuário se cadastre na aplicação. Ela utiliza o método POST e recebe os dados do usuário (nome, email e senha) através da requisição.
 
 
@@ -161,6 +163,21 @@ Antes de registrar o usuário, é realizada uma série de validações para gara
 
 
 Se todas as validações passarem, o usuário é registrado e é retornado um status code de sucesso (201 - Created) junto com o corpo da resposta, que inclui o ID, nome e email do usuário registrado.
+
+**Rota de login:**
+
+Antes de realizar o login, é realizada uma validação para garantir que o email e a senha enviados são válidos e correspondem a um usuário existente na aplicação. Caso alguma validação falhe, é retornado um status code de erro (404 - Not Found) junto com uma mensagem de erro específica ("User not found" ou "Invalid email or password").
+
+Se todas as validações passarem, o usuário é autenticado e é retornado um status code de sucesso (200 - OK) junto com o corpo da resposta, que inclui os dados do usuário autenticado (exceto a senha) e um token JWT para acesso a rotas protegidas.
+
+**Rota de logout:**
+
+A rota de logout é responsável por revogar a autenticação de um usuário. o logout é realizado adicionando o token atual na lista de tokens revogados.
+
+**Rota de criar Income ( /income ):**
+
+Responsável por validar e criar uma nova income, para criar uma nova income, o usuário precisa estar autenticado na aplicação e enviar um token de autenticação válido na requisição. A rota de criação de income valida se os campos enviados estão no formato correto (description é uma string e value é um número), e se estiver correto, uma nova incomeé criada no banco de dados. A rota retorna um status 201 (Created) junto com um objeto contendo os dados da incomecriada, incluindo seu ID, descrição e valor.
+
 
 ## Teste de integração nas rotas
 
@@ -198,6 +215,19 @@ Os testem cobrem quatro cenários
 - No logout desse usuário, retorna 204, caso seja um token valido
 
 - Caso falhe retorna 500 e mensagem referente a token inválido
+
+Rota income (POST):
+
+Os testem cobrem quatro cenários
+
+- Cria um usuário exclusivamente para esse teste
+
+- Faz o login desse usuário e guarda o token
+
+- Cria um income e retorna 201
+
+- retorna 500 quando o token é inválido
+
 
 ## Validação dos dados da ****requisição****
 

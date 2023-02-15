@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import IncomeRepository from "../repositories/IncomeRepository";
 import jwt from "jsonwebtoken";
-import { IncomingMessage } from "http";
 import { incomeValidator } from "../services/validations/IncomeValidator";
 
 const incomeRepository = new IncomeRepository()
@@ -20,6 +19,6 @@ export class IncomeController {
       description,
     };
     const income = await incomeRepository.createIncome(newIncome, userId)
-    return res.status(200).json(income)
+    return res.status(201).json(income)
   }
 } 
