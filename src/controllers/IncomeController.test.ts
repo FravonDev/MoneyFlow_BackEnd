@@ -1,6 +1,7 @@
 import app from "..";
 import request from "supertest";
 let token = "";
+
 describe("POST /income", () => {
   it("should create a user for incomes test", async () => {
     const response = await request(app).post("/register").send({
@@ -39,18 +40,19 @@ describe("POST /income", () => {
     expect(response.body).toHaveProperty("description", "test description");
     expect(response.body).toHaveProperty("value", 300);
   });
+  
   it("should not create a income, return 401", async () => {
     const response = await request(app)
       .post("/income")
       .set(
         "x-access-token",
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTE4LCJpYXQiOjE2NzYyMjU4MDgsImV4cCI6MTY3NjMxMjIwOH0.CQxvW8aP9wSnUTaL_K-jicZdgruQ-rbV6gsdm-OPJuk"
+        "UHsdosfjdfdsf.sadadfdsfd.cxsadsasdfgds.sadsd"
       )
       .send({
         description: "nooo",
         value: 100,
       });
     expect(response.statusCode).toBe(500);
-    expect(response.body).toHaveProperty("message", "jwt expired");
+    expect(response.body).toHaveProperty("message", "jwt malformed");
   });
 });

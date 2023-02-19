@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --exec ts-node ./src/index.ts",
-    "test": "jest"
+    "test": "dotenv -e .env.test npx prisma migrate reset --force && dotenv -e .env.test jest",
+    "migratedb:test": "dotenv -e .env.test -- npx prisma migrate dev",
+    "migratedb:prod": "dotenv -e .env -- npx prisma migrate dev",
+    "studio:test": "dotenv -e .env.test -- npx prisma studio",
+    "studio:prod": "dotenv -e .env -- npx prisma studio"
   },
   "keywords": [],
   "author": "",
@@ -17,7 +21,6 @@
     "@types/jsonwebtoken": "^9.0.1",
     "@types/node": "^18.11.18",
     "@types/supertest": "^2.0.12",
-
     "jest": "^29.4.0",
     "jsonwebtoken": "^9.0.0",
     "nodemon": "^2.0.20",
@@ -34,6 +37,7 @@
     "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
+    "dotenv-cli": "^7.0.0",
     "express": "^4.18.2",
     "express-async-errors": "^3.1.1",
     "install": "^0.13.0",
