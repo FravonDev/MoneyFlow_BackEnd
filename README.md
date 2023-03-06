@@ -178,7 +178,10 @@ A rota de logout é responsável por revogar a autenticação de um usuário. o 
 
 Responsável por validar e criar uma nova income, para criar uma nova income, o usuário precisa estar autenticado na aplicação e enviar um token de autenticação válido na requisição. A rota de criação de income valida se os campos enviados estão no formato correto (description é uma string e value é um número), e se estiver correto, uma nova incomeé criada no banco de dados. A rota retorna um status 201 (Created) junto com um objeto contendo os dados da incomecriada, incluindo seu ID, descrição e valor.
 
+**Rota de remover income (DELETE):**
 
+Responsável por deletar, para deletar uma income, o usuário precisa estar autenticado e ao id da income será validado para ver se pertence a ele. em caso de sucesso irá retornar 204 (no content).
+Se não pertencer ao usuario, ou não existir por algum motivo, irá retornar 404 (Not found)
 ## Teste de integração nas rotas
 
 Para verificar se as partes da aplicação funcionam corretamente juntas,  A biblioteca supertest é usada para realizar requisições HTTP e a classe UserRepository é instanciada para acessar a camada responsável  pelos dados dos usuários.
@@ -227,6 +230,13 @@ Os testem cobrem quatro cenários
 - Cria um income e retorna 201
 
 - retorna 500 quando o token é inválido
+
+Rota income (DELETE):
+Os testes cobrem 2 cenários
+- Deleta uma income e retorna 204
+- Retorna erro caso a income não pertença ao usuario
+
+
 
 
 ## Validação dos dados da ****requisição****

@@ -11,6 +11,7 @@ routes.post("/login", new UserController().login);
 routes.post("/logout", auth, new UserController().logout);
 
 routes.post("/income", auth, new IncomeController().addIncome);
+routes.delete("/income", auth, new IncomeController().deleteIncome);
 
 
 export { routes };

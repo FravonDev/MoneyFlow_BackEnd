@@ -69,7 +69,7 @@ describe("IncomeRepository methods", () => {
     expect(incomes.every((income) => income.userId === testUser.id)).toBe(true);
   });
   it("should delete a Income", async () => {
-    const user = await incomeRepository.deleteIncome(mockRepositories[0]);
+    const user = await incomeRepository.deleteIncome(mockRepositories[0].id);
     expect(mockRepositories.length).toEqual(0);
   });
 
