@@ -38,9 +38,9 @@ export default class IncomeRepository {
 
   })}
 
-  async deleteIncome(Income: Income) {
+  async deleteIncome(id: number) {
     return await prisma.income.delete({
-      where: { id: Income.id },
+      where: { id: id },
     });
   }
 }
